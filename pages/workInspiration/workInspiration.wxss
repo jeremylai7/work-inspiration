@@ -1,0 +1,749 @@
+page {
+  height: 100%;
+  background: #080a12;
+  color: #ffffff;
+}
+
+.work-page {
+  min-height: 100%;
+  background: #080a12;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.nav {
+  height: 96rpx;
+  background: #0a0b13;
+  border-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+}
+
+.nav-title {
+  color: #ffffff;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.content {
+  padding: 20rpx 18rpx 60rpx;
+  background: #080a12;
+  box-sizing: border-box;
+}
+
+.slogan-row {
+  height: 54rpx;
+  display: flex;
+  align-items: center;
+}
+
+.green-dot {
+  width: 16rpx;
+  height: 16rpx;
+  margin-right: 14rpx;
+  border-radius: 50%;
+  background: #12dd86;
+  box-shadow: 0 0 18rpx #12dd86;
+  flex-shrink: 0;
+}
+
+.slogan {
+  flex: 1;
+  color: #22d47f;
+  font-size: 28rpx;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.clock {
+  color: #8c95aa;
+  font-size: 25rpx;
+}
+
+.income-card {
+  height: 348rpx;
+  margin-top: 18rpx;
+  padding: 48rpx 38rpx 34rpx;
+  border: 1rpx solid rgba(35, 236, 154, 0.22);
+  border-radius: 20rpx;
+  background: #121525;
+  box-shadow: 0 0 34rpx rgba(12, 210, 128, 0.14);
+  box-sizing: border-box;
+}
+
+.income-card--day-off {
+  border-color: rgba(237, 194, 85, 0.28);
+  background: linear-gradient(135deg, #1a1826, #121525);
+  box-shadow: 0 0 34rpx rgba(237, 194, 85, 0.12);
+}
+
+.income-card--privacy {
+  height: 410rpx;
+  padding: 38rpx 38rpx 28rpx;
+}
+
+.day-off-tag {
+  padding: 7rpx 14rpx;
+  border-radius: 18rpx;
+  color: #edc255;
+  background: rgba(237, 194, 85, 0.12);
+  font-size: 22rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.day-off-message {
+  margin-top: 34rpx;
+  color: #f5d57a;
+  font-size: 76rpx;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 4rpx;
+  text-shadow: 0 0 24rpx rgba(237, 194, 85, 0.28);
+}
+
+.day-off-caption {
+  display: block;
+  margin-top: 24rpx;
+  color: #aaa6b7;
+  font-size: 27rpx;
+}
+
+.income-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.income-label-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.income-visibility-toggle {
+  width: 50rpx;
+  height: 42rpx;
+  margin-left: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 21rpx;
+}
+
+.income-visibility-toggle--pressed {
+  background: rgba(241, 193, 91, .1);
+}
+
+.income-eye-image {
+  width: 32rpx;
+  height: 24rpx;
+}
+
+.muted {
+  color: #8c94a7;
+  font-size: 27rpx;
+}
+
+.bonus {
+  position: relative;
+  color: #e8c057;
+  font-size: 25rpx;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(10rpx);
+  will-change: transform, opacity;
+}
+
+.bonus--pulse {
+  animation: bonus-float-up 1000ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes bonus-float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10rpx);
+  }
+  12% {
+    opacity: 1;
+    transform: translateY(6rpx);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-34rpx);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-64rpx);
+  }
+}
+
+.money-row {
+  margin-top: 18rpx;
+  display: flex;
+  align-items: baseline;
+}
+
+.money-private {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.currency {
+  margin-right: 12rpx;
+  color: #10dc83;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+
+.money {
+  color: #12dd86;
+  font-size: 92rpx;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 24rpx rgba(18, 221, 134, 0.5);
+}
+
+.money--masked {
+  letter-spacing: 7rpx;
+}
+
+.money--real,
+.privacy-hint-pressing {
+  display: none;
+}
+
+.money-private--pressing .money--masked,
+.money-private--pressing .privacy-hint-default {
+  display: none;
+}
+
+.money-private--pressing .money--real,
+.money-private--pressing .privacy-hint-pressing {
+  display: inline;
+}
+
+.money-private--visible .money--masked,
+.money-private--visible .privacy-hint-default {
+  display: none;
+}
+
+.money-private--visible .money--real {
+  display: inline;
+}
+
+.money-private--visible .privacy-hint {
+  visibility: hidden;
+}
+
+.privacy-hint {
+  height: 42rpx;
+  margin-top: 10rpx;
+  display: flex;
+  align-items: center;
+  color: #a58d70;
+  font-size: 24rpx;
+}
+
+.privacy-fingerprint {
+  width: 38rpx;
+  height: 38rpx;
+  margin-right: 10rpx;
+  flex: none;
+}
+
+.live-row {
+  margin-top: 18rpx;
+  color: #18c783;
+  display: flex;
+  align-items: center;
+  font-size: 25rpx;
+}
+
+.live-dot {
+  width: 18rpx;
+  height: 18rpx;
+  margin-right: 12rpx;
+  border-radius: 50%;
+  background: #17d989;
+  box-shadow: none;
+}
+
+.live-row--paused {
+  color: #8c94a7;
+}
+
+.live-dot--paused {
+  background: #687083;
+  box-shadow: none;
+}
+
+.progress-track {
+  height: 13rpx;
+  margin-top: 26rpx;
+  border-radius: 8rpx;
+  background: #242838;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 8rpx;
+  background: #15df89;
+  transition: width 500ms ease;
+}
+
+.progress-text {
+  display: block;
+  margin-top: 14rpx;
+  color: #8b93a5;
+  font-size: 24rpx;
+}
+
+.config-card {
+  margin-top: 28rpx;
+  padding: 30rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.05);
+  border-radius: 20rpx;
+  background: #121525;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.config-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.config-title,
+.config-caption {
+  display: block;
+}
+
+.config-title {
+  color: #ffffff;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.config-caption {
+  margin-top: 8rpx;
+  color: #737c90;
+  font-size: 22rpx;
+}
+
+.config-status {
+  padding: 8rpx 16rpx;
+  border: 1rpx solid rgba(22, 221, 137, 0.35);
+  border-radius: 18rpx;
+  color: #18d98a;
+  background: rgba(22, 221, 137, 0.08);
+  font-size: 21rpx;
+  line-height: 1;
+}
+
+.config-status--editing {
+  border-color: rgba(237, 194, 85, 0.42);
+  color: #edc255;
+  background: rgba(237, 194, 85, 0.09);
+}
+
+.config-summary {
+  margin-top: 28rpx;
+  overflow: hidden;
+  border-radius: 14rpx;
+  background: #171b2d;
+}
+
+.config-summary-row {
+  min-height: 82rpx;
+  padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-summary-row + .config-summary-row {
+  border-top: 1rpx solid rgba(255, 255, 255, 0.06);
+}
+
+.config-summary-row--time {
+  min-height: 112rpx;
+}
+
+.config-label {
+  color: #9aa2b5;
+  font-size: 25rpx;
+}
+
+.config-value {
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+
+.config-value--salary {
+  width: 130rpx;
+  color: #edc255;
+  font-size: 34rpx;
+  text-align: left;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.salary-value-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.salary-visibility-toggle {
+  width: 58rpx;
+  height: 52rpx;
+  margin: 0 20rpx 0 0;
+  border-radius: 26rpx;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.salary-eye-image {
+  width: 38rpx;
+  height: 28rpx;
+}
+
+.confirmed-times {
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 25rpx;
+  line-height: 1.75;
+}
+
+.config-button {
+  height: 72rpx;
+  margin: 26rpx 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 36rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  line-height: 72rpx;
+}
+
+.config-button::after {
+  border: 0;
+}
+
+.config-button--primary,
+.config-button--confirm {
+  color: #07100c;
+  background: #16dd89;
+  box-shadow: none;
+  box-shadow: none;
+}
+
+.config-field {
+  min-height: 90rpx;
+  margin-top: 24rpx;
+  padding: 0 24rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  border-radius: 14rpx;
+  background: #171b2d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.salary-input-wrap {
+  color: #edc255;
+  display: flex;
+  align-items: center;
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.work-days-input-wrap {
+  display: flex;
+  align-items: center;
+  color: #fff4d8;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.work-days-input {
+  width: 88rpx;
+  height: 70rpx;
+  color: #fff4d8;
+  text-align: right;
+  font-size: 30rpx;
+}
+
+.work-days-unit {
+  margin-left: 12rpx;
+  color: #aa9376;
+  font-size: 25rpx;
+  font-weight: 400;
+}
+
+.salary-input {
+  width: 200rpx;
+  height: 70rpx;
+  margin-left: 8rpx;
+  color: #ffffff;
+  text-align: right;
+  font-size: 30rpx;
+}
+
+.config-field--times {
+  min-height: 94rpx;
+}
+
+.time-range {
+  display: flex;
+  align-items: center;
+}
+
+.time-picker {
+  min-width: 126rpx;
+  height: 58rpx;
+  border: 1rpx solid rgba(22, 221, 137, 0.26);
+  border-radius: 10rpx;
+  color: #ffffff;
+  background: rgba(22, 221, 137, 0.06);
+  text-align: center;
+  font-size: 25rpx;
+  line-height: 58rpx;
+}
+
+.time-separator {
+  margin: 0 16rpx;
+  color: #737c90;
+  font-size: 22rpx;
+}
+
+.config-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.config-actions .config-button {
+  flex: 1;
+}
+
+.config-button--secondary {
+  border: 1rpx solid rgba(255, 255, 255, 0.12);
+  color: #a5adbd;
+  background: #181c2d;
+}
+
+.ad-container {
+  width: 100%;
+  margin-top: 20rpx;
+  overflow: hidden;
+  border-radius: 14rpx;
+  box-sizing: border-box;
+}
+
+/* PC 桌面卡片模式：不影响手机端完整布局 */
+.desktop-mode-button {
+  position: absolute;
+  left: 20rpx;
+  bottom: 15rpx;
+  height: 64rpx;
+  min-width: 150rpx;
+  padding: 0 18rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1rpx solid rgba(255, 221, 128, .86);
+  border-radius: 32rpx;
+  color: #2b1609;
+  background: linear-gradient(135deg, #ffd875 0%, #eba437 100%);
+  box-shadow: 0 6rpx 18rpx rgba(226, 144, 39, .34), inset 0 1rpx 0 rgba(255, 250, 220, .72);
+  font-size: 23rpx;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+.nav {
+  position: relative;
+}
+
+.desktop-mode-button--pressed {
+  opacity: .72;
+  transform: scale(.96);
+}
+
+.desktop-mode-label {
+  line-height: 1;
+}
+
+.work-page--compact {
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.work-page--compact .config-card,
+.work-page--compact .ad-container {
+  display: none;
+}
+
+/* 黑金生财皮肤：仅替换视觉，不改变原有布局 */
+page {
+  background: #110d0a;
+  color: #fff4d8;
+}
+
+.work-page {
+  color: #fff4d8;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(170, 91, 27, .18), transparent 34%),
+    linear-gradient(180deg, #100c09 0%, #1b0e0b 54%, #0e0a08 100%);
+}
+
+.nav {
+  background: rgba(15, 10, 7, .96);
+}
+
+.nav-title,
+.config-title,
+.config-value,
+.confirmed-times,
+.salary-input,
+.time-picker {
+  color: #fff4d8;
+}
+
+.content {
+  background: transparent;
+}
+
+.green-dot,
+.live-dot {
+  background: #f1c15b;
+  box-shadow: 0 0 18rpx rgba(241, 193, 91, .7);
+}
+
+.slogan,
+.live-row,
+.config-status {
+  color: #f1c15b;
+}
+
+.clock,
+.muted,
+.progress-text,
+.config-caption,
+.config-label,
+.time-separator {
+  color: #aa9376;
+}
+
+.income-card {
+  border-color: rgba(241, 193, 91, .3);
+  background:
+    linear-gradient(115deg, transparent 25%, rgba(255, 220, 143, .035) 48%, transparent 70%),
+    radial-gradient(circle at 74% 12%, rgba(201, 118, 36, .16), transparent 42%),
+    linear-gradient(145deg, #321b12, #17100c 72%);
+  box-shadow: inset 0 1rpx 0 rgba(255, 229, 169, .07), 0 0 34rpx rgba(218, 141, 47, .12);
+}
+
+.income-card--day-off {
+  border-color: rgba(241, 193, 91, .28);
+  background: linear-gradient(135deg, #321b14, #17100c);
+  box-shadow: 0 0 34rpx rgba(241, 193, 91, .1);
+}
+
+.day-off-tag {
+  color: #f1c15b;
+  background: rgba(241, 193, 91, .11);
+}
+
+.day-off-message,
+.bonus,
+.currency,
+.money,
+.config-value--salary,
+.salary-input-wrap {
+  color: #ffd36f;
+}
+
+.money {
+  text-shadow: 0 0 14rpx rgba(255, 211, 111, .46), 0 0 34rpx rgba(215, 126, 37, .28);
+}
+
+.bonus {
+  text-shadow: 0 0 12rpx rgba(255, 211, 111, .35);
+}
+
+.day-off-caption,
+.live-row--paused {
+  color: #9d8b74;
+}
+
+.live-dot--paused {
+  background: #77695a;
+  box-shadow: none;
+}
+
+.progress-track {
+  background: #3c2b20;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, #d98529, #ffd875);
+  box-shadow: 0 0 12rpx rgba(241, 193, 91, .38);
+}
+
+.config-card {
+  border-color: rgba(241, 193, 91, .17);
+  background: linear-gradient(145deg, rgba(65, 29, 21, .97), rgba(28, 16, 12, .98));
+  box-shadow: inset 0 1rpx 0 rgba(255, 226, 163, .06), 0 14rpx 34rpx rgba(0, 0, 0, .18);
+}
+
+.config-status {
+  border-color: rgba(241, 193, 91, .35);
+  background: rgba(241, 193, 91, .08);
+}
+
+.config-status--editing {
+  border-color: rgba(255, 211, 111, .42);
+  color: #ffd36f;
+  background: rgba(241, 193, 91, .1);
+}
+
+.config-summary,
+.config-field {
+  border-color: rgba(241, 193, 91, .13);
+  background: rgba(18, 12, 9, .58);
+}
+
+.config-summary-row + .config-summary-row {
+  border-top-color: rgba(241, 193, 91, .1);
+}
+
+.time-picker {
+  border-color: rgba(241, 193, 91, .24);
+  background: rgba(241, 193, 91, .06);
+}
+
+.config-button--primary,
+.config-button--confirm {
+  color: #321708;
+  background: linear-gradient(90deg, #d88b2f, #ffd77b, #e8a53e);
+  box-shadow: 0 10rpx 24rpx rgba(208, 121, 32, .2);
+}
+
+.config-button--secondary {
+  border-color: rgba(241, 193, 91, .18);
+  color: #c0a98a;
+  background: rgba(26, 16, 12, .76);
+}

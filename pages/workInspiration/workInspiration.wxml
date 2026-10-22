@@ -1,0 +1,199 @@
+<view class="work-page {{isCompactMode ? 'work-page--compact' : ''}}">
+  <view class="nav" style="padding-top: {{statusBarHeight}}px;">
+    <text class="nav-title">上班鼓励器</text>
+    <view
+      wx:if="{{isDesktop}}"
+      class="desktop-mode-button"
+      hover-class="desktop-mode-button--pressed"
+      aria-role="button"
+      aria-label="{{isCompactMode ? '展开完整页面' : '切换为桌面卡片'}}"
+      bindtap="toggleCompactMode"
+    >
+      <text class="desktop-mode-label">{{isCompactMode ? '展开页面' : '卡片模式'}}</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <view class="slogan-row">
+      <view class="green-dot"></view>
+      <text class="slogan">{{isDayOff ? '今日放假，安心休息' : '稳步守住此刻，日子会越来越宽裕'}}</text>
+      <text class="clock">{{clock}}</text>
+    </view>
+
+    <view class="income-card {{isDayOff ? 'income-card--day-off' : 'income-card--privacy'}}">
+      <block wx:if="{{isDayOff}}">
+        <view class="income-top">
+          <text class="muted">{{dayOffType}}</text>
+          <text class="day-off-tag">休息日</text>
+        </view>
+        <view class="day-off-message">今日放假</view>
+        <text class="day-off-caption">不打卡，不卷，安心休息</text>
+      </block>
+      <block wx:else>
+        <view class="income-top">
+          <view class="income-label-wrap">
+            <text class="muted">今日收入</text>
+            <view
+              class="income-visibility-toggle"
+              hover-class="income-visibility-toggle--pressed"
+              aria-role="button"
+              aria-label="{{isIncomeHidden ? '持续显示今日收入' : '隐藏今日收入'}}"
+              catchtap="toggleIncomeVisibility"
+            >
+              <image
+                class="income-eye-image"
+                src="{{isIncomeHidden ? '/images/salary-eye-closed.svg' : '/images/salary-eye-open.svg'}}"
+                mode="aspectFit"
+              ></image>
+            </view>
+          </view>
+          <text class="bonus {{bonusPulse ? 'bonus--pulse' : ''}}">+¥{{twoSecondAmount}}</text>
+        </view>
+        <view
+          class="money-private {{isIncomeHidden ? '' : 'money-private--visible'}}"
+          hover-class="{{isIncomeHidden ? 'money-private--pressing' : 'none'}}"
+          hover-start-time="0"
+          hover-stay-time="0"
+          aria-role="button"
+          aria-label="按住查看今日收入"
+        >
+          <view class="money-row">
+            <text class="currency">¥</text>
+            <text class="money money--masked">•••.••</text>
+            <text class="money money--real">{{todayIncome}}</text>
+          </view>
+          <view class="privacy-hint">
+            <image class="privacy-fingerprint" src="/images/privacy-fingerprint.svg" mode="aspectFit"></image>
+            <text class="privacy-hint-default">按住查看金额</text>
+            <text class="privacy-hint-pressing">松开隐藏金额</text>
+          </view>
+        </view>
+        <view class="live-row {{isWorking ? '' : 'live-row--paused'}}">
+          <view class="live-dot {{isWorking ? '' : 'live-dot--paused'}}"></view>
+          <text>{{workStatus}}</text>
+        </view>
+        <view class="progress-track">
+          <view class="progress-fill" style="width: {{progressWidth}};"></view>
+        </view>
+        <text class="progress-text">今日进度 {{progressPercent}}%</text>
+      </block>
+    </view>
+
+    <view class="config-card">
+      <view class="config-header">
+        <view>
+          <text class="config-title">工资配置</text>
+          <text class="config-caption">按每月 {{workDaysPerMonth}} 个工作日折算</text>
+        </view>
+        <text class="config-status {{isEditingConfig ? 'config-status--editing' : ''}}">{{configStatus}}</text>
+      </view>
+
+      <block wx:if="{{!isEditingConfig}}">
+        <view class="config-summary">
+          <view class="config-summary-row">
+            <text class="config-label">月薪</text>
+            <view class="salary-value-wrap">
+              <view
+                class="salary-visibility-toggle"
+                aria-role="button"
+                aria-label="{{isSalaryHidden ? '显示月薪' : '隐藏月薪'}}"
+                catchtap="toggleSalaryVisibility"
+              >
+                <image
+                  class="salary-eye-image"
+                  src="{{isSalaryHidden ? '/images/salary-eye-closed.svg' : '/images/salary-eye-open.svg'}}"
+                  mode="aspectFit"
+                ></image>
+              </view>
+              <text wx:if="{{isSalaryHidden}}" class="config-value config-value--salary">****</text>
+              <text wx:else class="config-value config-value--salary">¥{{monthlySalary}}</text>
+            </view>
+          </view>
+          <view class="config-summary-row">
+            <text class="config-label">每月计薪天数</text>
+            <text class="config-value">{{workDaysPerMonth}} 天</text>
+          </view>
+          <view class="config-summary-row config-summary-row--time">
+            <text class="config-label">上班时间</text>
+            <view class="confirmed-times">
+              <text>{{morningStart}} - {{morningEnd}}</text>
+              <text>{{afternoonStart}} - {{afternoonEnd}}</text>
+            </view>
+          </view>
+        </view>
+        <button class="config-button config-button--primary" bindtap="beginConfigUpdate">更新配置</button>
+      </block>
+
+      <block wx:else>
+        <view class="config-field">
+          <text class="config-label">月薪</text>
+          <view class="salary-input-wrap">
+            <text>¥</text>
+            <input
+              class="salary-input"
+              type="digit"
+              maxlength="10"
+              value="{{draftMonthlySalary}}"
+              bindinput="onMonthlySalaryInput"
+            />
+          </view>
+        </view>
+
+        <view class="config-field">
+          <text class="config-label">每月计薪天数</text>
+          <view class="work-days-input-wrap">
+            <input
+              class="work-days-input"
+              type="number"
+              maxlength="2"
+              value="{{draftWorkDaysPerMonth}}"
+              bindinput="onWorkDaysInput"
+            />
+            <text class="work-days-unit">天</text>
+          </view>
+        </view>
+
+        <view class="config-field config-field--times">
+          <text class="config-label">上午</text>
+          <view class="time-range">
+            <picker mode="time" value="{{draftMorningStart}}" data-field="draftMorningStart" bindchange="onConfigTimeChange">
+              <view class="time-picker">{{draftMorningStart}}</view>
+            </picker>
+            <text class="time-separator">至</text>
+            <picker mode="time" value="{{draftMorningEnd}}" data-field="draftMorningEnd" bindchange="onConfigTimeChange">
+              <view class="time-picker">{{draftMorningEnd}}</view>
+            </picker>
+          </view>
+        </view>
+
+        <view class="config-field config-field--times">
+          <text class="config-label">下午</text>
+          <view class="time-range">
+            <picker mode="time" value="{{draftAfternoonStart}}" data-field="draftAfternoonStart" bindchange="onConfigTimeChange">
+              <view class="time-picker">{{draftAfternoonStart}}</view>
+            </picker>
+            <text class="time-separator">至</text>
+            <picker mode="time" value="{{draftAfternoonEnd}}" data-field="draftAfternoonEnd" bindchange="onConfigTimeChange">
+              <view class="time-picker">{{draftAfternoonEnd}}</view>
+            </picker>
+          </view>
+        </view>
+
+        <view class="config-actions">
+          <button class="config-button config-button--secondary" bindtap="cancelConfigUpdate">取消</button>
+          <button class="config-button config-button--confirm" bindtap="confirmConfigUpdate">确认保存</button>
+        </view>
+      </block>
+    </view>
+
+    <view class="ad-container">
+      <ad
+        unit-id="adunit-53ceb16e96028fb1"
+        ad-theme="black"
+        bindload="onBannerAdLoad"
+        binderror="onBannerAdError"
+        bindclose="onBannerAdClose"
+      ></ad>
+    </view>
+  </view>
+</view>
