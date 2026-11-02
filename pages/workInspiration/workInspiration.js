@@ -144,7 +144,7 @@ Page({
           data: { code: loginResult.code },
           success: (response) => {
             const openid = String(response.data || '').trim();
-            if (!openid) {
+            if (response.statusCode !== 200 || !openid || typeof response.data !== 'string') {
               if (fail) fail();
               return;
             }
@@ -173,12 +173,16 @@ Page({
   },
 
   loadRemoteConfig() {
+    // 尚未同步的本地配置优先，避免被服务端旧数据覆盖。
+    if (wx.getStorageSync('workInspirationConfigPending')) return;
+    const configRevision = this.configRevision || 0;
     this.withOpenid((openid) => {
       app.request({
         url: `/work-inspiration/config`,
         method: 'GET',
         data: { openid },
         success: (response) => {
+          if (configRevision !== (this.configRevision || 0) || this.data.isEditingConfig) return;
           const remoteConfig = response.data;
           const monthlySalary = Number(remoteConfig && remoteConfig.monthlySalary);
           if (response.statusCode !== 200 || !remoteConfig || !Number.isFinite(monthlySalary) || monthlySalary <= 0) {
@@ -213,7 +217,25 @@ Page({
   },
 
   saveRemoteConfig(config) {
-    wx.showLoading({ title: '保存中...' });
+    // 先保存本地，登录或接口不可用也能立即生效。
+    try {
+      wx.setStorageSync('workInspirationConfigPending', true);
+      wx.setStorageSync('workInspirationConfig', config);
+    } catch (error) {
+      wx.showToast({ title: '本地保存失败，请重试', icon: 'none' });
+      return;
+    }
+    const configRevision = this.configRevision = (this.configRevision || 0) + 1;
+    this.setData({
+      ...config,
+      isEditingConfig: false,
+      configStatus: '已确认'
+    }, () => {
+      this.refreshIncomeRate();
+      this.updateIncome();
+    });
+    wx.showToast({ title: '配置已保存', icon: 'success' });
+
     this.withOpenid((openid) => {
       app.request({
         url: '/work-inspiration/config',
@@ -228,30 +250,12 @@ Page({
           afternoonEndTime: config.afternoonEnd
         },
         success: (response) => {
-          if (response.statusCode < 200 || response.statusCode >= 300) {
-            wx.showToast({ title: '保存失败，请稍后重试', icon: 'none' });
-            return;
+          if (response.statusCode >= 200 && response.statusCode < 300 &&
+              configRevision === this.configRevision) {
+            wx.removeStorageSync('workInspirationConfigPending');
           }
-
-          wx.setStorageSync('workInspirationConfig', config);
-          this.setData({
-            ...config,
-            isEditingConfig: false,
-            configStatus: '已确认'
-          }, () => {
-            this.refreshIncomeRate();
-            this.updateIncome();
-          });
-          wx.showToast({ title: '配置已保存', icon: 'success' });
-        },
-        fail: () => {
-          wx.showToast({ title: '保存失败，请检查网络', icon: 'none' });
-        },
-        complete: () => wx.hideLoading()
+        }
       });
-    }, () => {
-      wx.hideLoading();
-      wx.showToast({ title: '登录失败，请稍后重试', icon: 'none' });
     });
   },
 
