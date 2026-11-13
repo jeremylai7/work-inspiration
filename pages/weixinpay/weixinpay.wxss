@@ -1,0 +1,155 @@
+/* pages/weixinpay/weixinpay.wxss */
+page {
+  min-height: 100%;
+  background: #f5f7f6;
+  color: #18251f;
+}
+
+.payment-page {
+  min-height: 100vh;
+  padding: 20rpx 30rpx calc(40rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.page-header {
+  margin-bottom: 24rpx;
+}
+
+.page-title {
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+.page-subtitle {
+  margin-top: 10rpx;
+  color: #8a9690;
+  font-size: 24rpx;
+}
+
+.pay-card {
+  margin-bottom: 24rpx;
+  padding: 28rpx 32rpx 30rpx;
+  background: #ffffff;
+  border: 1rpx solid #e8ecea;
+  border-radius: 24rpx;
+  box-shadow: 0 10rpx 30rpx rgba(24, 55, 42, 0.06);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+}
+
+.card-title {
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.card-desc {
+  margin-top: 7rpx;
+  color: #929c97;
+  font-size: 22rpx;
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  height: 94rpx;
+  padding: 0 24rpx;
+  background: #f6f8f7;
+  border: 2rpx solid transparent;
+  border-radius: 18rpx;
+  box-sizing: border-box;
+}
+
+.quantity-options {
+  display: flex;
+  justify-content: space-between;
+}
+
+.quantity-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23%;
+  height: 72rpx;
+  color: #59665f;
+  font-size: 25rpx;
+  background: #f6f8f7;
+  border: 2rpx solid transparent;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+
+.quantity-option--active {
+  color: #80530d;
+  font-weight: 700;
+  background: #fff1c7;
+  border-color: #efb84f;
+}
+
+.custom-input-box {
+  margin-top: 18rpx;
+}
+
+.input-prefix {
+  margin-right: 14rpx;
+  color: #08a66c;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.amount-input {
+  min-width: 0;
+  height: 100%;
+  flex: 1;
+  color: #18251f;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.quantity-input {
+  font-size: 34rpx;
+}
+
+.input-unit {
+  margin-left: 12rpx;
+  color: #7c8882;
+  font-size: 24rpx;
+}
+
+.pay-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58%;
+  height: 88rpx;
+  margin: 25rpx auto 0;
+  padding: 0;
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1;
+  background: #08a66c;
+  border: none;
+  border-radius: 18rpx;
+}
+
+.pay-button::after {
+  border: none;
+}
+
+.pay-button--light {
+  color: #ffffff;
+  background: #08a66c;
+  box-shadow: 0 10rpx 22rpx rgba(8, 166, 108, 0.2);
+}
+
+.safe-tip {
+  padding-top: 12rpx;
+  color: #a3aca8;
+  font-size: 21rpx;
+  text-align: center;
+}

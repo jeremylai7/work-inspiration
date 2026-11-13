@@ -1,0 +1,56 @@
+<!-- pages/weixinpay/weixinpay.wxml -->
+<view class="payment-page">
+  <view class="page-header">
+    <view class="page-title">支付中心</view>
+    <view class="page-subtitle">选择需要的支付方式</view>
+  </view>
+
+  <!-- <view class="pay-card">
+    <view class="card-head">
+      <view>
+        <view class="card-title">赞赏支持</view>
+        <view class="card-desc">微信支付</view>
+      </view>
+    </view>
+    <view class="input-box">
+      <text class="input-prefix">¥</text>
+      <input class="amount-input" type="digit" value="{{price}}" placeholder="请输入金额" bindinput="changeprice" />
+      <text class="input-unit">元</text>
+    </view>
+    <button class="pay-button" bindtap="wxPay" disabled>赞赏 {{price}} 元</button>
+  </view> -->
+  <view class="pay-card">
+    <view class="card-head">
+      <view>
+        <view class="card-title">虚拟内容</view>
+        <view class="card-desc">购买虚拟商品</view>
+      </view>
+    </view>
+    <view class="quantity-options">
+      <view
+        wx:for="{{quantityOptions}}"
+        wx:key="*this"
+        class="quantity-option {{!isCustomQuantity && buyQuantity == item ? 'quantity-option--active' : ''}}"
+        data-value="{{item}}"
+        bindtap="selectQuantity"
+      >
+        {{item}}个
+      </view>
+      <view
+        class="quantity-option {{isCustomQuantity ? 'quantity-option--active' : ''}}"
+        bindtap="selectCustomQuantity"
+      >
+        自定义
+      </view>
+    </view>
+
+    <view wx:if="{{isCustomQuantity}}" class="input-box custom-input-box">
+      <input class="amount-input quantity-input" type="number" value="{{buyQuantity}}" placeholder="请输入购买数量" focus="{{isCustomQuantity}}" bindinput="changebuyQuantity" />
+      <text class="input-unit">个</text>
+    </view>
+    <button class="pay-button pay-button--light" bindtap="wxVirtualPay">
+      {{buyQuantity ? '购买 ' + buyQuantity + ' 个' : '请输入购买数量'}}
+    </button>
+  </view>
+  <view class="safe-tip">支付服务由微信提供</view>
+</view>

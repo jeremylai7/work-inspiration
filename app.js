@@ -10,6 +10,10 @@ switch (miniProgram.envVersion) {
     httptype = 'http://'
     url = '127.0.0.1:8080' 
     wstype = "ws://"
+    // httptype = 'https://'
+    // url = 'www.jeremy7.cn' 
+    // wstype = "wss://"
+
     break;
   case 'trial': // 体验版
   case 'release': // 正式版
