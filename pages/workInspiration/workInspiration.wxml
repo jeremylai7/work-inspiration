@@ -37,12 +37,12 @@
               class="income-visibility-toggle"
               hover-class="income-visibility-toggle--pressed"
               aria-role="button"
-              aria-label="{{isIncomeHidden ? '持续显示今日收入' : '隐藏今日收入'}}"
+              aria-label="{{incomeHidden ? '持续显示今日收入' : '隐藏今日收入'}}"
               catchtap="toggleIncomeVisibility"
             >
               <image
                 class="income-eye-image"
-                src="{{isIncomeHidden ? '/images/salary-eye-closed.svg' : '/images/salary-eye-open.svg'}}"
+                src="{{incomeHidden ? '/images/salary-eye-closed.svg' : '/images/salary-eye-open.svg'}}"
                 mode="aspectFit"
               ></image>
             </view>
@@ -50,8 +50,8 @@
           <text class="bonus {{bonusPulse ? 'bonus--pulse' : ''}}">+¥{{twoSecondAmount}}</text>
         </view>
         <view
-          class="money-private {{isIncomeHidden ? '' : 'money-private--visible'}}"
-          hover-class="{{isIncomeHidden ? 'money-private--pressing' : 'none'}}"
+          class="money-private {{incomeHidden ? '' : 'money-private--visible'}}"
+          hover-class="{{incomeHidden ? 'money-private--pressing' : 'none'}}"
           hover-start-time="0"
           hover-stay-time="0"
           aria-role="button"
@@ -96,16 +96,16 @@
               <view
                 class="salary-visibility-toggle"
                 aria-role="button"
-                aria-label="{{isSalaryHidden ? '显示月薪' : '隐藏月薪'}}"
+                aria-label="{{salaryHidden ? '显示月薪' : '隐藏月薪'}}"
                 catchtap="toggleSalaryVisibility"
               >
                 <image
                   class="salary-eye-image"
-                  src="{{isSalaryHidden ? '/images/salary-eye-closed.svg' : '/images/salary-eye-open.svg'}}"
+                  src="{{salaryHidden ? '/images/salary-eye-closed.svg' : '/images/salary-eye-open.svg'}}"
                   mode="aspectFit"
                 ></image>
               </view>
-              <text wx:if="{{isSalaryHidden}}" class="config-value config-value--salary">****</text>
+              <text wx:if="{{salaryHidden}}" class="config-value config-value--salary">****</text>
               <text wx:else class="config-value config-value--salary">¥{{monthlySalary}}</text>
             </view>
           </view>

@@ -24,8 +24,8 @@ Page({
     morningEnd: '12:00',
     afternoonStart: '13:30',
     afternoonEnd: '18:00',
-    isSalaryHidden: false,
-    isIncomeHidden: false,
+    salaryHidden: false,
+    incomeHidden: false,
     draftMonthlySalary: '10000',
     draftWorkDaysPerMonth: 22,
     draftMorningStart: '09:00',
@@ -49,8 +49,8 @@ Page({
       ? storedPreference
       : 'auto';
     const storedConfig = wx.getStorageSync('workInspirationConfig') || {};
-    const isSalaryHidden = wx.getStorageSync('workInspirationSalaryHidden') === true;
-    const isIncomeHidden = wx.getStorageSync('workInspirationIncomeHidden') === true;
+    const salaryHidden = this.normalizeHidden(storedConfig.salaryHidden, wx.getStorageSync('salaryHidden') === true);
+    const incomeHidden = this.normalizeHidden(storedConfig.incomeHidden, wx.getStorageSync('incomeHidden') === true);
     const config = {
       monthlySalary: storedConfig.monthlySalary || this.data.monthlySalary,
       workDaysPerMonth: this.normalizeWorkDays(storedConfig.workDaysPerMonth, this.data.workDaysPerMonth),
@@ -66,8 +66,8 @@ Page({
       compactModePreference,
       isCompactMode: this.resolveCompactMode(windowInfo, isDesktop, compactModePreference),
       ...config,
-      isSalaryHidden,
-      isIncomeHidden,
+      salaryHidden,
+      incomeHidden,
       draftMonthlySalary: config.monthlySalary,
       draftWorkDaysPerMonth: config.workDaysPerMonth,
       draftMorningStart: config.morningStart,
@@ -174,7 +174,10 @@ Page({
 
   loadRemoteConfig() {
     // 尚未同步的本地配置优先，避免被服务端旧数据覆盖。
-    if (wx.getStorageSync('workInspirationConfigPending')) return;
+    if (wx.getStorageSync('workInspirationConfigPending')) {
+      this.syncRemoteConfig();
+      return;
+    }
     const configRevision = this.configRevision || 0;
     this.withOpenid((openid) => {
       app.request({
@@ -195,10 +198,14 @@ Page({
             morningStart: this.normalizeConfigTime(remoteConfig.morningStartTime, this.data.morningStart),
             morningEnd: this.normalizeConfigTime(remoteConfig.morningEndTime, this.data.morningEnd),
             afternoonStart: this.normalizeConfigTime(remoteConfig.afternoonStartTime, this.data.afternoonStart),
-            afternoonEnd: this.normalizeConfigTime(remoteConfig.afternoonEndTime, this.data.afternoonEnd)
+            afternoonEnd: this.normalizeConfigTime(remoteConfig.afternoonEndTime, this.data.afternoonEnd),
+            salaryHidden: this.normalizeHidden(remoteConfig.salaryHidden, this.data.salaryHidden),
+            incomeHidden: this.normalizeHidden(remoteConfig.incomeHidden, this.data.incomeHidden)
           };
 
           wx.setStorageSync('workInspirationConfig', config);
+          wx.setStorageSync('salaryHidden', config.salaryHidden);
+          wx.setStorageSync('incomeHidden', config.incomeHidden);
           this.setData({
             ...config,
             draftMonthlySalary: config.monthlySalary,
@@ -210,13 +217,23 @@ Page({
           }, () => {
             this.refreshIncomeRate();
             this.updateIncome();
+            if ((remoteConfig.salaryHidden === null && config.salaryHidden) ||
+                (remoteConfig.incomeHidden === null && config.incomeHidden)) {
+              this.saveVisibility(config.salaryHidden, config.incomeHidden);
+            }
           });
         }
       });
     });
   },
 
-  saveRemoteConfig(config) {
+  normalizeHidden(value, fallback) {
+    if (value === true || value === 1) return true;
+    if (value === false || value === 0) return false;
+    return fallback;
+  },
+
+  saveRemoteConfig(config, visibilityOnly = false) {
     // 先保存本地，登录或接口不可用也能立即生效。
     try {
       wx.setStorageSync('workInspirationConfigPending', true);
@@ -225,7 +242,12 @@ Page({
       wx.showToast({ title: '本地保存失败，请重试', icon: 'none' });
       return;
     }
-    const configRevision = this.configRevision = (this.configRevision || 0) + 1;
+    this.configRevision = (this.configRevision || 0) + 1;
+    if (visibilityOnly) {
+      this.setData({ salaryHidden: config.salaryHidden, incomeHidden: config.incomeHidden });
+      this.syncRemoteConfig();
+      return;
+    }
     this.setData({
       ...config,
       isEditingConfig: false,
@@ -236,27 +258,45 @@ Page({
     });
     wx.showToast({ title: '配置已保存', icon: 'success' });
 
+    this.syncRemoteConfig();
+  },
+
+  syncRemoteConfig() {
+    if (this.configSyncInFlight) return;
+    this.configSyncInFlight = true;
+    const configRevision = this.configRevision || 0;
+    const {
+      monthlySalary, workDaysPerMonth, morningStart, morningEnd,
+      afternoonStart, afternoonEnd, salaryHidden, incomeHidden
+    } = this.data;
+    const finish = () => {
+      this.configSyncInFlight = false;
+      if (configRevision !== (this.configRevision || 0)) this.syncRemoteConfig();
+    };
     this.withOpenid((openid) => {
       app.request({
         url: '/work-inspiration/config',
         method: 'POST',
         data: {
           openid,
-          monthlySalary: Number(config.monthlySalary),
-          workDaysPerMonth: Number(config.workDaysPerMonth),
-          morningStartTime: config.morningStart,
-          morningEndTime: config.morningEnd,
-          afternoonStartTime: config.afternoonStart,
-          afternoonEndTime: config.afternoonEnd
+          monthlySalary: Number(monthlySalary),
+          workDaysPerMonth: Number(workDaysPerMonth),
+          morningStartTime: morningStart,
+          morningEndTime: morningEnd,
+          afternoonStartTime: afternoonStart,
+          afternoonEndTime: afternoonEnd,
+          salaryHidden,
+          incomeHidden
         },
         success: (response) => {
           if (response.statusCode >= 200 && response.statusCode < 300 &&
-              configRevision === this.configRevision) {
+              configRevision === (this.configRevision || 0)) {
             wx.removeStorageSync('workInspirationConfigPending');
           }
-        }
+        },
+        complete: finish
       });
-    });
+    }, finish);
   },
 
   toggleCompactMode() {
@@ -487,15 +527,19 @@ Page({
   },
 
   toggleSalaryVisibility() {
-    const isSalaryHidden = !this.data.isSalaryHidden;
-    this.setData({ isSalaryHidden });
-    wx.setStorageSync('workInspirationSalaryHidden', isSalaryHidden);
+    this.saveVisibility(!this.data.salaryHidden, this.data.incomeHidden);
   },
 
   toggleIncomeVisibility() {
-    const isIncomeHidden = !this.data.isIncomeHidden;
-    this.setData({ isIncomeHidden });
-    wx.setStorageSync('workInspirationIncomeHidden', isIncomeHidden);
+    this.saveVisibility(this.data.salaryHidden, !this.data.incomeHidden);
+  },
+
+  saveVisibility(salaryHidden, incomeHidden) {
+    const { monthlySalary, workDaysPerMonth, morningStart, morningEnd, afternoonStart, afternoonEnd } = this.data;
+    this.saveRemoteConfig({
+      monthlySalary, workDaysPerMonth, morningStart, morningEnd,
+      afternoonStart, afternoonEnd, salaryHidden, incomeHidden
+    }, true);
   },
 
   onConfigTimeChange(event) {
@@ -534,7 +578,9 @@ Page({
       morningStart: this.data.draftMorningStart,
       morningEnd: this.data.draftMorningEnd,
       afternoonStart: this.data.draftAfternoonStart,
-      afternoonEnd: this.data.draftAfternoonEnd
+      afternoonEnd: this.data.draftAfternoonEnd,
+      salaryHidden: this.data.salaryHidden,
+      incomeHidden: this.data.incomeHidden
     };
 
     this.saveRemoteConfig(config);
