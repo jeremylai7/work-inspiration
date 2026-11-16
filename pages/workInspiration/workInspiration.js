@@ -25,7 +25,7 @@ Page({
     afternoonStart: '13:30',
     afternoonEnd: '18:00',
     isSalaryHidden: false,
-    isIncomeHidden: true,
+    isIncomeHidden: false,
     draftMonthlySalary: '10000',
     draftWorkDaysPerMonth: 22,
     draftMorningStart: '09:00',
@@ -50,7 +50,7 @@ Page({
       : 'auto';
     const storedConfig = wx.getStorageSync('workInspirationConfig') || {};
     const isSalaryHidden = wx.getStorageSync('workInspirationSalaryHidden') === true;
-    const isIncomeHidden = wx.getStorageSync('workInspirationIncomeHidden') !== false;
+    const isIncomeHidden = wx.getStorageSync('workInspirationIncomeHidden') === true;
     const config = {
       monthlySalary: storedConfig.monthlySalary || this.data.monthlySalary,
       workDaysPerMonth: this.normalizeWorkDays(storedConfig.workDaysPerMonth, this.data.workDaysPerMonth),
