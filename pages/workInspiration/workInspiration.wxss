@@ -238,7 +238,7 @@ page {
 
 .money {
   color: #1fd385;
-  font-size: 80rpx;
+  font-size: 70rpx;
   font-weight: 600;
   line-height: 1;
   text-shadow: 0 0 24rpx rgba(18, 221, 134, 0.5);
