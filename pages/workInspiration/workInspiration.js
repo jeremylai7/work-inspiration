@@ -310,17 +310,23 @@ Page({
     this.updateIncome();
     this.clockTimer = setInterval(() => this.updateClock(), 1000);
     this.incomeTimer = setInterval(() => this.updateIncome(), 2000);
-    this.bonusTimer = setInterval(() => this.triggerTwoSecondBonus(), 2000);
+    this.bonusTimer = setInterval(() => this.triggerTwoSecondBonus(), 1000);
+    this.bonusSpeedTimer = setTimeout(() => {
+      clearInterval(this.bonusTimer);
+      this.bonusTimer = setInterval(() => this.triggerTwoSecondBonus(), 2000);
+    }, 6000);
   },
 
   clearTimers() {
     clearInterval(this.clockTimer);
     clearInterval(this.incomeTimer);
     clearInterval(this.bonusTimer);
+    clearTimeout(this.bonusSpeedTimer);
     clearTimeout(this.bonusPulseTimer);
     this.clockTimer = null;
     this.incomeTimer = null;
     this.bonusTimer = null;
+    this.bonusSpeedTimer = null;
     this.bonusPulseTimer = null;
   },
 
@@ -474,7 +480,7 @@ Page({
 
     this.setData({
       todayIncome: Math.min(dailyIncome, income).toFixed(2),
-      progressPercent: Math.min(100, progress).toFixed(1),
+      progressPercent: Math.min(100, progress).toFixed(4),
       progressWidth: `${Math.min(100, progress)}%`,
       isWorking: state.isWorking,
       isDayOff: state.isDayOff,
