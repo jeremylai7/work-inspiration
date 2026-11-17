@@ -310,6 +310,11 @@ Page({
     this.updateIncome();
     this.clockTimer = setInterval(() => this.updateClock(), 1000);
     this.incomeTimer = setInterval(() => this.updateIncome(), 2000);
+    this.incomeMotionTimer = setInterval(() => this.updateIncomeAmount(), 50);
+    this.incomeMotionSpeedTimer = setTimeout(() => {
+      clearInterval(this.incomeMotionTimer);
+      this.incomeMotionTimer = setInterval(() => this.updateIncomeAmount(), 100);
+    }, 6000);
     this.bonusTimer = setInterval(() => this.triggerTwoSecondBonus(), 1000);
     this.bonusSpeedTimer = setTimeout(() => {
       clearInterval(this.bonusTimer);
@@ -320,11 +325,15 @@ Page({
   clearTimers() {
     clearInterval(this.clockTimer);
     clearInterval(this.incomeTimer);
+    clearInterval(this.incomeMotionTimer);
+    clearTimeout(this.incomeMotionSpeedTimer);
     clearInterval(this.bonusTimer);
     clearTimeout(this.bonusSpeedTimer);
     clearTimeout(this.bonusPulseTimer);
     this.clockTimer = null;
     this.incomeTimer = null;
+    this.incomeMotionTimer = null;
+    this.incomeMotionSpeedTimer = null;
     this.bonusTimer = null;
     this.bonusSpeedTimer = null;
     this.bonusPulseTimer = null;
@@ -432,7 +441,8 @@ Page({
       };
     }
 
-    const secondOfDay = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    const secondOfDay = now.getHours() * 3600 + now.getMinutes() * 60 +
+      now.getSeconds() + now.getMilliseconds() / 1000;
     const morningStart = this.timeToSeconds(this.data.morningStart);
     const morningEnd = this.timeToSeconds(this.data.morningEnd);
     const afternoonStart = this.timeToSeconds(this.data.afternoonStart);
@@ -479,14 +489,25 @@ Page({
     const progress = state.elapsedWorkSeconds / state.totalWorkSeconds * 100;
 
     this.setData({
-      todayIncome: Math.min(dailyIncome, income).toFixed(2),
-      progressPercent: Math.min(100, progress).toFixed(4),
+      todayIncome: Math.min(dailyIncome, income).toFixed(4),
+      progressPercent: Math.min(100, progress).toFixed(2),
       progressWidth: `${Math.min(100, progress)}%`,
       isWorking: state.isWorking,
       isDayOff: state.isDayOff,
       dayOffType: state.dayOffType,
       workStatus: state.workStatus
     });
+  },
+
+  updateIncomeAmount() {
+    const state = this.getWorkState();
+    const dailyIncome = this.getDailyIncome();
+    const income = dailyIncome * state.elapsedWorkSeconds / state.totalWorkSeconds;
+    const todayIncome = Math.min(dailyIncome, income).toFixed(4);
+
+    if (todayIncome !== this.data.todayIncome) {
+      this.setData({ todayIncome });
+    }
   },
 
   refreshIncomeRate() {

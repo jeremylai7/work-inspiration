@@ -239,7 +239,7 @@ page {
 .money {
   color: #12dd86;
   font-size: 92rpx;
-  font-weight: 900;
+  font-weight: 600;
   line-height: 1;
   text-shadow: 0 0 24rpx rgba(18, 221, 134, 0.5);
 }
@@ -294,7 +294,7 @@ page {
 
 .live-row {
   margin-top: 18rpx;
-  color: #18c783;
+  color: #b8df5a;
   display: flex;
   align-items: center;
   font-size: 25rpx;
@@ -305,8 +305,9 @@ page {
   height: 18rpx;
   margin-right: 12rpx;
   border-radius: 50%;
-  background: #17d989;
+  background: #b8df5a;
   box-shadow: none;
+  animation: working-pulse 1200ms ease-in-out infinite;
 }
 
 .live-row--paused {
@@ -316,6 +317,21 @@ page {
 .live-dot--paused {
   background: #687083;
   box-shadow: none;
+  animation: none;
+}
+
+@keyframes working-pulse {
+  0%,
+  100% {
+    opacity: .55;
+    transform: scale(.8);
+    box-shadow: 0 0 0 0 rgba(184, 223, 90, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 0 0 10rpx rgba(184, 223, 90, .18);
+  }
 }
 
 .progress-track {
@@ -665,16 +681,23 @@ page {
   background: transparent;
 }
 
-.green-dot,
-.live-dot {
+.green-dot {
   background: #f1c15b;
   box-shadow: 0 0 18rpx rgba(241, 193, 91, .7);
 }
 
 .slogan,
-.live-row,
 .config-status {
   color: #f1c15b;
+}
+
+.live-row {
+  color: #b8df5a;
+}
+
+.live-dot {
+  background: #b8df5a;
+  box-shadow: 0 0 12rpx rgba(184, 223, 90, .68);
 }
 
 .current-date,
