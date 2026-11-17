@@ -15,9 +15,14 @@
 
   <view class="content">
     <view class="slogan-row">
-      <view class="green-dot"></view>
-      <text class="slogan">{{isDayOff ? '今日放假，安心休息' : '稳步守住此刻，日子会越来越宽裕'}}</text>
-      <text class="clock">{{clock}}</text>
+      <view class="slogan-line">
+        <view class="green-dot"></view>
+        <text class="slogan">{{isDayOff ? '今日放假，安心休息' : '稳步守住此刻，日子会越来越富有'}}</text>
+      </view>
+      <view class="date-time">
+        <text class="current-date">{{currentDateText}}</text>
+        <text class="clock">{{clock}}</text>
+      </view>
     </view>
 
     <view class="income-card {{isDayOff ? 'income-card--day-off' : 'income-card--privacy'}}">

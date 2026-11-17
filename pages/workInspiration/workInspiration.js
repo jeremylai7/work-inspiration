@@ -5,6 +5,7 @@ Page({
   data: {
     statusBarHeight: 20,
     clock: '08:30:56',
+    currentDateText: '-- 月 -- 日 星期-',
     todayIncome: '0.00',
     progressPercent: '0.0',
     progressWidth: '0%',
@@ -49,8 +50,8 @@ Page({
       ? storedPreference
       : 'auto';
     const storedConfig = wx.getStorageSync('workInspirationConfig') || {};
-    const salaryHidden = this.normalizeHidden(storedConfig.salaryHidden, wx.getStorageSync('salaryHidden') === true);
-    const incomeHidden = this.normalizeHidden(storedConfig.incomeHidden, wx.getStorageSync('incomeHidden') === true);
+    const salaryHidden = wx.getStorageSync('salaryHidden') === true;
+    const incomeHidden = wx.getStorageSync('incomeHidden') === true;
     const config = {
       monthlySalary: storedConfig.monthlySalary || this.data.monthlySalary,
       workDaysPerMonth: this.normalizeWorkDays(storedConfig.workDaysPerMonth, this.data.workDaysPerMonth),
@@ -199,8 +200,8 @@ Page({
             morningEnd: this.normalizeConfigTime(remoteConfig.morningEndTime, this.data.morningEnd),
             afternoonStart: this.normalizeConfigTime(remoteConfig.afternoonStartTime, this.data.afternoonStart),
             afternoonEnd: this.normalizeConfigTime(remoteConfig.afternoonEndTime, this.data.afternoonEnd),
-            salaryHidden: this.normalizeHidden(remoteConfig.salaryHidden, this.data.salaryHidden),
-            incomeHidden: this.normalizeHidden(remoteConfig.incomeHidden, this.data.incomeHidden)
+            salaryHidden: this.data.salaryHidden,
+            incomeHidden: this.data.incomeHidden
           };
 
           wx.setStorageSync('workInspirationConfig', config);
@@ -225,12 +226,6 @@ Page({
         }
       });
     });
-  },
-
-  normalizeHidden(value, fallback) {
-    if (value === true || value === 1) return true;
-    if (value === false || value === 0) return false;
-    return fallback;
   },
 
   saveRemoteConfig(config, visibilityOnly = false) {
@@ -332,9 +327,11 @@ Page({
   updateClock() {
     const now = new Date();
     const pad = (value) => String(value).padStart(2, '0');
+    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     const dateKey = this.getDateKey(now);
     this.setData({
-      clock: `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+      clock: `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`,
+      currentDateText: `${pad(now.getMonth() + 1)} 月 ${pad(now.getDate())} 日 星期${weekdays[now.getDay()]}`
     });
 
     if (dateKey !== this.data.holidayDateKey) {
