@@ -1,6 +1,6 @@
 <view class="work-page {{isCompactMode ? 'work-page--compact' : ''}}">
   <view class="nav" style="padding-top: {{statusBarHeight}}px;">
-    <text class="nav-title">上班鼓励器</text>
+    <text class="nav-title">上班鼓励宝</text>
     <view
       wx:if="{{isDesktop}}"
       class="desktop-mode-button"

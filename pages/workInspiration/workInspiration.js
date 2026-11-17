@@ -6,7 +6,7 @@ Page({
     statusBarHeight: 20,
     clock: '08:30:56',
     currentDateText: '-- 月 -- 日 星期-',
-    todayIncome: '0.00',
+    todayIncome: '0.000',
     progressPercent: '0.0',
     progressWidth: '0%',
     twoSecondAmount: '0.0222',
@@ -309,7 +309,7 @@ Page({
     this.updateClock();
     this.updateIncome();
     this.clockTimer = setInterval(() => this.updateClock(), 1000);
-    this.incomeTimer = setInterval(() => this.updateIncome(), 2000);
+    this.incomeTimer = setInterval(() => this.updateIncomeStatus(this.getWorkState()), 2000);
     this.incomeMotionTimer = setInterval(() => this.updateIncomeAmount(), 50);
     this.incomeMotionSpeedTimer = setTimeout(() => {
       clearInterval(this.incomeMotionTimer);
@@ -483,13 +483,20 @@ Page({
   },
 
   updateIncome() {
-    const state = this.getWorkState();
-    const dailyIncome = this.getDailyIncome();
-    const income = dailyIncome * state.elapsedWorkSeconds / state.totalWorkSeconds;
+    const now = new Date();
+    const state = this.getWorkState(now);
+    this.incomeDate = now.toDateString();
+    this.incomeWorkSeconds = state.elapsedWorkSeconds;
+    this.incomePerSecond = this.getDailyIncome() / state.totalWorkSeconds;
+    this.accumulatedIncome = this.incomePerSecond * state.elapsedWorkSeconds;
+    this.renderIncome();
+    this.updateIncomeStatus(state);
+  },
+
+  updateIncomeStatus(state) {
     const progress = state.elapsedWorkSeconds / state.totalWorkSeconds * 100;
 
     this.setData({
-      todayIncome: Math.min(dailyIncome, income).toFixed(4),
       progressPercent: Math.min(100, progress).toFixed(2),
       progressWidth: `${Math.min(100, progress)}%`,
       isWorking: state.isWorking,
@@ -500,11 +507,23 @@ Page({
   },
 
   updateIncomeAmount() {
-    const state = this.getWorkState();
-    const dailyIncome = this.getDailyIncome();
-    const income = dailyIncome * state.elapsedWorkSeconds / state.totalWorkSeconds;
-    const todayIncome = Math.min(dailyIncome, income).toFixed(4);
+    const now = new Date();
+    const state = this.getWorkState(now);
+    const workedSeconds = state.elapsedWorkSeconds - this.incomeWorkSeconds;
+    if (now.toDateString() !== this.incomeDate || workedSeconds < 0) {
+      this.updateIncome();
+      return;
+    }
+    if (workedSeconds === 0) return;
 
+    this.incomeWorkSeconds = state.elapsedWorkSeconds;
+    this.accumulatedIncome = Math.min(this.getDailyIncome(),
+      this.accumulatedIncome + workedSeconds * this.incomePerSecond);
+    this.renderIncome();
+  },
+
+  renderIncome() {
+    const todayIncome = this.accumulatedIncome.toFixed(3);
     if (todayIncome !== this.data.todayIncome) {
       this.setData({ todayIncome });
     }
@@ -645,13 +664,13 @@ Page({
   // 当前页面转发
   onShareAppMessage() {
     return {
-      title: '上班鼓励器助手',
+      title: '上班鼓励宝',
       path: '/pages/workInspiration/workInspiration'
     };
   },
   onShareTimeline() {
     return {
-      title: '上班鼓励器助手',
+      title: '上班鼓励宝',
       query: ''
     };
   }
