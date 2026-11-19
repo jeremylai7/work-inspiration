@@ -9,6 +9,7 @@ Page({
     todayIncome: '0.000',
     progressPercent: '0.0',
     progressWidth: '0%',
+    remainingWorkTime: '',
     twoSecondAmount: '0.0222',
     bonusPulse: false,
     isWorking: false,
@@ -495,10 +496,14 @@ Page({
 
   updateIncomeStatus(state) {
     const progress = state.elapsedWorkSeconds / state.totalWorkSeconds * 100;
+    const remainingMinutes = Math.ceil((state.totalWorkSeconds - state.elapsedWorkSeconds) / 60);
+    const hours = Math.floor(remainingMinutes / 60);
+    const minutes = remainingMinutes % 60;
 
     this.setData({
       progressPercent: Math.min(100, progress).toFixed(2),
       progressWidth: `${Math.min(100, progress)}%`,
+      remainingWorkTime: state.isDayOff ? '' : `${hours ? `${hours}小时` : ''}${minutes}分钟`,
       isWorking: state.isWorking,
       isDayOff: state.isDayOff,
       dayOffType: state.dayOffType,

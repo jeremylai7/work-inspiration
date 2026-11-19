@@ -358,11 +358,23 @@ page {
   transition: width 500ms ease;
 }
 
-.progress-text {
-  display: block;
+.progress-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
   margin-top: 14rpx;
+}
+
+.progress-text {
   color: #8b93a5;
   font-size: 24rpx;
+  white-space: nowrap;
+}
+
+.progress-remaining {
+  margin-left: auto;
+  padding-left: 12rpx;
+  font-variant-numeric: tabular-nums;
 }
 
 .config-card {

@@ -80,7 +80,10 @@
         <view class="progress-track">
           <view class="progress-fill" style="width: {{progressWidth}};"></view>
         </view>
-        <text class="progress-text">今日进度 {{progressPercent}}%</text>
+        <view class="progress-meta">
+          <text class="progress-text">今日进度 {{progressPercent}}%</text>
+          <text class="progress-text progress-remaining" wx:if="{{remainingWorkTime}}">剩余 {{remainingWorkTime}}</text>
+        </view>
       </block>
     </view>
 
