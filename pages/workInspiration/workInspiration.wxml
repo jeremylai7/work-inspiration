@@ -194,6 +194,10 @@
       </block>
     </view>
 
+    <view class="online-status">
+      <text>当前 <text class="online-status-count">22</text> 人在线</text>
+    </view>
+
     <view class="ad-container">
       <ad
         unit-id="adunit-53ceb16e96028fb1"
