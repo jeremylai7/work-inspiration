@@ -621,12 +621,47 @@ page {
 }
 
 .online-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 20rpx 0;
-  color: #a58f77;
+  color: #ffc107;
   font-size: 21rpx;
   line-height: 1.5;
   text-align: center;
   font-variant-numeric: tabular-nums;
+}
+
+.online-status-dot {
+  position: relative;
+  top: 2rpx;
+  width: 18rpx;
+  height: 18rpx;
+  margin-right: 12rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #4caf50;
+  animation: online-status-pulse 1200ms ease-in-out infinite;
+}
+
+@keyframes online-status-pulse {
+  0%,
+  100% {
+    opacity: .55;
+    transform: scale(.8);
+    box-shadow: 0 0 0 0 rgba(255, 211, 111, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+    box-shadow: 0 0 0 10rpx rgba(255, 211, 111, .18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .online-status-dot {
+    animation: none;
+  }
 }
 
 .online-status-count {

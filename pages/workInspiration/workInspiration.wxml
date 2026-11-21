@@ -195,6 +195,7 @@
     </view>
 
     <view class="online-status">
+      <view class="online-status-dot" aria-hidden="true"></view>
       <text>当前 <text class="online-status-count">{{onlineCount}}</text> 人在线</text>
     </view>
 
