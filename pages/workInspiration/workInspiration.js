@@ -10,6 +10,7 @@ Page({
     progressPercent: '0.0',
     progressWidth: '0%',
     remainingWorkTime: '',
+    onlineCount: app.globalData.onlineCount,
     twoSecondAmount: '0.0222',
     bonusPulse: false,
     isWorking: false,
@@ -97,7 +98,12 @@ Page({
   },
 
   onShow() {
+    this.updateOnlineCount(app.globalData.onlineCount);
     this.startTimers();
+  },
+
+  updateOnlineCount(onlineCount) {
+    this.setData({ onlineCount });
   },
 
   onHide() {
@@ -129,41 +135,6 @@ Page({
     }
   },
 
-  withOpenid(success, fail) {
-    if (app.globalData.openid) {
-      success(app.globalData.openid);
-      return;
-    }
-
-    wx.login({
-      success: (loginResult) => {
-        if (!loginResult.code) {
-          if (fail) fail();
-          return;
-        }
-        app.request({
-          url: `/wechat/login`,
-          data: { code: loginResult.code },
-          success: (response) => {
-            const openid = String(response.data || '').trim();
-            if (response.statusCode !== 200 || !openid || typeof response.data !== 'string') {
-              if (fail) fail();
-              return;
-            }
-            app.globalData.openid = openid;
-            success(openid);
-          },
-          fail: () => {
-            if (fail) fail();
-          }
-        });
-      },
-      fail: () => {
-        if (fail) fail();
-      }
-    });
-  },
-
   normalizeConfigTime(value, fallback) {
     const time = String(value || '').slice(0, 5);
     return /^([01]\d|2[0-3]):[0-5]\d$/.test(time) ? time : fallback;
@@ -181,7 +152,7 @@ Page({
       return;
     }
     const configRevision = this.configRevision || 0;
-    this.withOpenid((openid) => {
+    app.getOpenid().then((openid) => {
       app.request({
         url: `/work-inspiration/config`,
         method: 'GET',
@@ -226,7 +197,7 @@ Page({
           });
         }
       });
-    });
+    }, () => {});
   },
 
   saveRemoteConfig(config, visibilityOnly = false) {
@@ -269,7 +240,7 @@ Page({
       this.configSyncInFlight = false;
       if (configRevision !== (this.configRevision || 0)) this.syncRemoteConfig();
     };
-    this.withOpenid((openid) => {
+    app.getOpenid().then((openid) => {
       app.request({
         url: '/work-inspiration/config',
         method: 'POST',
