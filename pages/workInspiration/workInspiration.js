@@ -1,4 +1,5 @@
 const HOLIDAY_API_URL = 'https://timor.tech/api/holiday/info/';
+const DESKTOP_GUIDE_DATE_KEY = 'workInspirationDesktopGuideDate';
 const app = getApp();
 
 Page({
@@ -10,6 +11,7 @@ Page({
     progressPercent: '0.0',
     progressWidth: '0%',
     remainingWorkTime: '',
+    desktopGuide: null,
     onlineCount: app.globalData.onlineCount,
     twoSecondAmount: '0.0222',
     bonusPulse: false,
@@ -100,6 +102,43 @@ Page({
   onShow() {
     this.updateOnlineCount(app.globalData.onlineCount);
     this.startTimers();
+    this.showDesktopGuide();
+  },
+
+  showDesktopGuide() {
+    if (this.data.isCompactMode || typeof wx.getMenuButtonBoundingClientRect !== 'function') return;
+
+    const today = this.getDateKey(new Date());
+    if (this.desktopGuideDate === today) return;
+
+    const menu = wx.getMenuButtonBoundingClientRect();
+    const { windowWidth } = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
+    if (!menu || !(menu.width > 0 && menu.bottom > 0 && menu.right >= menu.width && windowWidth >= menu.right)) return;
+
+    try {
+      if (wx.getStorageSync(DESKTOP_GUIDE_DATE_KEY) === today) return;
+      wx.setStorageSync(DESKTOP_GUIDE_DATE_KEY, today);
+    } catch (error) {
+      console.warn('桌面引导缓存不可用', error);
+    }
+
+    const menuRight = windowWidth - menu.right;
+    const right = Math.max(10, menuRight);
+    this.desktopGuideDate = today;
+    this.setData({
+      desktopGuide: {
+        top: menu.bottom + 16,
+        right,
+        maxWidth: windowWidth - right - 10,
+        arrowRight: menuRight - right + menu.width * .75
+      }
+    });
+    this.desktopGuideTimer = setTimeout(() => this.hideDesktopGuide(), 5000);
+  },
+
+  hideDesktopGuide() {
+    clearTimeout(this.desktopGuideTimer);
+    if (this.data.desktopGuide) this.setData({ desktopGuide: null });
   },
 
   updateOnlineCount(onlineCount) {
@@ -107,10 +146,12 @@ Page({
   },
 
   onHide() {
+    this.hideDesktopGuide();
     this.clearTimers();
   },
 
   onUnload() {
+    this.hideDesktopGuide();
     this.clearTimers();
     if (wx.offWindowResize && this.windowResizeHandler) {
       wx.offWindowResize(this.windowResizeHandler);

@@ -27,6 +27,53 @@ page {
   font-weight: 700;
 }
 
+.desktop-guide {
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 0 0 10px;
+  border-radius: 6px;
+  background: #333333;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 20px;
+  pointer-events: none;
+}
+
+.desktop-guide-text {
+  min-width: 0;
+  padding: 10px 0;
+}
+
+.desktop-guide-close {
+  flex: 0 0 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 44px;
+  pointer-events: auto;
+}
+
+.desktop-guide-close::after {
+  border: 0;
+}
+
+.desktop-guide-arrow {
+  position: absolute;
+  top: -10px;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #333333;
+  border-left: 10px solid transparent;
+  transform: translateX(50%);
+}
+
 .content {
   padding: 20rpx 18rpx 60rpx;
   background: #080a12;
