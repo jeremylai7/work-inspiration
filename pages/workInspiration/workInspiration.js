@@ -102,7 +102,10 @@ Page({
   onShow() {
     this.updateOnlineCount(app.globalData.onlineCount);
     this.startTimers();
-    this.showDesktopGuide();
+    clearTimeout(this.desktopGuideDelayTimer);
+    if (!this.data.isCompactMode) {
+      this.desktopGuideDelayTimer = setTimeout(() => this.showDesktopGuide(), 2500);
+    }
   },
 
   showDesktopGuide() {
@@ -124,12 +127,11 @@ Page({
 
     const menuRight = windowWidth - menu.right;
     const right = Math.max(10, menuRight);
+    const maxWidth = windowWidth - right - 10;
     this.desktopGuideDate = today;
     this.setData({
       desktopGuide: {
-        top: menu.bottom + 16,
-        right,
-        maxWidth: windowWidth - right - 10,
+        style: `top: ${menu.bottom + 16}px; right: ${right}px; max-width: ${maxWidth}px;`,
         arrowRight: menuRight - right + menu.width * .75
       }
     });
@@ -137,6 +139,7 @@ Page({
   },
 
   hideDesktopGuide() {
+    clearTimeout(this.desktopGuideDelayTimer);
     clearTimeout(this.desktopGuideTimer);
     if (this.data.desktopGuide) this.setData({ desktopGuide: null });
   },

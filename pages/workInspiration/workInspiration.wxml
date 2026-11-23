@@ -15,12 +15,14 @@
 
   <view
     wx:if="{{desktopGuide && !isCompactMode}}"
-    class="desktop-guide"
-    style="top: {{desktopGuide.top}}px; right: {{desktopGuide.right}}px; max-width: {{desktopGuide.maxWidth}}px;"
+    class="desktop-guide-row"
+    style="{{desktopGuide.style}}"
   >
-    <view class="desktop-guide-arrow" style="right: {{desktopGuide.arrowRight}}px;" aria-hidden="true"></view>
-    <text class="desktop-guide-text">点击「添加到桌面」，下次访问更便捷</text>
-    <button class="desktop-guide-close" aria-label="关闭桌面引导" catchtap="hideDesktopGuide">×</button>
+    <view class="desktop-guide">
+      <view class="desktop-guide-arrow" style="right: {{desktopGuide.arrowRight}}px;" aria-hidden="true"></view>
+      <text class="desktop-guide-text">点击「添加到桌面」，下次访问更便捷</text>
+      <button class="desktop-guide-close" aria-label="关闭桌面引导" catchtap="hideDesktopGuide">×</button>
+    </view>
   </view>
 
   <view class="content">
