@@ -54,8 +54,12 @@ Page({
       ? storedPreference
       : 'auto';
     const storedConfig = wx.getStorageSync('workInspirationConfig') || {};
-    const salaryHidden = wx.getStorageSync('salaryHidden') === true;
-    const incomeHidden = wx.getStorageSync('incomeHidden') === true;
+    const salaryHidden = typeof storedConfig.salaryHidden === 'boolean'
+      ? storedConfig.salaryHidden
+      : wx.getStorageSync('salaryHidden') === true;
+    const incomeHidden = typeof storedConfig.incomeHidden === 'boolean'
+      ? storedConfig.incomeHidden
+      : wx.getStorageSync('incomeHidden') === true;
     const config = {
       monthlySalary: storedConfig.monthlySalary || this.data.monthlySalary,
       workDaysPerMonth: this.normalizeWorkDays(storedConfig.workDaysPerMonth, this.data.workDaysPerMonth),
@@ -216,8 +220,12 @@ Page({
             morningEnd: this.normalizeConfigTime(remoteConfig.morningEndTime, this.data.morningEnd),
             afternoonStart: this.normalizeConfigTime(remoteConfig.afternoonStartTime, this.data.afternoonStart),
             afternoonEnd: this.normalizeConfigTime(remoteConfig.afternoonEndTime, this.data.afternoonEnd),
-            salaryHidden: this.data.salaryHidden,
-            incomeHidden: this.data.incomeHidden
+            salaryHidden: typeof remoteConfig.salaryHidden === 'boolean'
+              ? remoteConfig.salaryHidden
+              : this.data.salaryHidden,
+            incomeHidden: typeof remoteConfig.incomeHidden === 'boolean'
+              ? remoteConfig.incomeHidden
+              : this.data.incomeHidden
           };
 
           wx.setStorageSync('workInspirationConfig', config);
